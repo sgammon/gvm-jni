@@ -49,4 +49,3 @@ This project was generated via the [Micronaut Launch](https://launch.micronaut.i
 - Template: Command-Line App via Picocli
 - Enabled `kapt` (Picocli does not support KSP yet)
 - Enabled `graalvm` feature for native builds
-- 
