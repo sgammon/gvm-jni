@@ -1,12 +1,8 @@
 package com.example
 
 import io.micronaut.configuration.picocli.PicocliRunner
-import io.micronaut.context.ApplicationContext
-
-import picocli.CommandLine
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
-import picocli.CommandLine.Parameters
 
 @Command(name = "demo", description = ["..."],
         mixinStandardHelpOptions = true)
@@ -20,6 +16,9 @@ class DemoCommand : Runnable {
         if (verbose) {
             println("Hi!")
         }
+        System.loadLibrary("nativeimpl")
+        val isolateThread: Long = SportCarNative.createIsolate()
+        SportCarNative.init(isolateThread)
     }
 
     companion object {

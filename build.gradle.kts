@@ -9,7 +9,8 @@ plugins {
 version = "0.1"
 group = "com.example"
 
-val kotlinVersion=project.properties.get("kotlinVersion")
+val kotlinVersion = project.properties.get("kotlinVersion")
+
 repositories {
     mavenCentral()
 }
@@ -27,17 +28,18 @@ dependencies {
     runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
 }
 
-
 application {
     mainClass = "com.example.DemoCommand"
 }
+
 java {
-    sourceCompatibility = JavaVersion.toVersion("17")
+    sourceCompatibility = JavaVersion.toVersion("21")
+    targetCompatibility = JavaVersion.toVersion("21")
 }
 
 kotlin {
     jvmToolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
 }
 
@@ -49,9 +51,13 @@ micronaut {
     }
 }
 
-
 tasks.named<io.micronaut.gradle.docker.NativeImageDockerfile>("dockerfileNative") {
     jdkVersion = "21"
 }
 
-
+tasks.named("run", JavaExec::class) {
+    project(":lib").layout.buildDirectory.dir("native/nativeCompile").get().asFile.toPath().let { libpath ->
+        systemProperties("java.library.path" to libpath.toString())
+        environment("LIB_PATH", libpath.resolve("nativeimpl.dylib").toString())
+    }
+}
